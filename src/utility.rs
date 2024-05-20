@@ -265,11 +265,13 @@ pub fn from_string<S: AsRef<str>>(string: S) -> CString {
     CString::new(string.as_ref()).expect("invalid C string")
 }
 
-pub unsafe fn to_string(clang: CXString) -> String {
+pub fn to_string(clang: CXString) -> String {
+    unsafe {
         let c = CStr::from_ptr(clang_getCString(clang));
         let rust = c.to_str().expect("invalid Rust string").into();
         clang_disposeString(clang);
         rust
+    }
 }
 
 pub fn to_string_option(clang: CXString) -> Option<String> {
